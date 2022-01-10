@@ -1,6 +1,8 @@
 import * as nacl from 'tweetnacl';
 import * as naclUtil from 'tweetnacl-util';
 
+import * as eciesjs from 'eciesjs';
+
 import { isNullish } from './utils';
 
 export interface EthEncryptedData {
@@ -198,6 +200,29 @@ export function decrypt({
         return output;
       }
       throw new Error('Decryption failed.');
+    }
+
+    case 'ecies': {
+      // nasty cheap js to decode
+      let toDecode = encryptedData.ciphertext;
+      let output;
+      if (toDecode[0] == '0' && toDecode[1] == 'x') {
+        toDecode = toDecode.substring(2);
+      }
+
+      const toDecodeBuffer = Buffer.from(toDecode, 'hex');
+
+      try {
+        output = eciesjs.decrypt(privateKey, toDecodeBuffer).toString();
+      } catch (err) {
+        // TODO
+        throw new Error('Decryption no bueno.');
+      }
+
+      if (output) {
+        return output;
+      }
+      throw new Error('decrypted to nothing :(');
     }
 
     default:

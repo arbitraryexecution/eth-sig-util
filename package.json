@@ -44,6 +44,7 @@
     "airtap/engine.io-client/xmlhttprequest-ssl": "^1.6.2"
   },
   "dependencies": {
+    "eciesjs": "^0.3.12",
     "ethereumjs-abi": "^0.6.8",
     "ethereumjs-util": "^6.2.1",
     "ethjs-util": "^0.1.6",
